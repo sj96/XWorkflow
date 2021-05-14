@@ -1,24 +1,27 @@
-package org.sj.core.demo.workflow.process;
+package sj.freetime.workflow.process;
 
-import org.sj.core.demo.workflow.XFlow;
-import org.sj.core.demo.workflow.XProcess;
-import org.sj.core.demo.workflow.model.XData;
+import sj.freetime.workflow.XFlow;
+import sj.freetime.workflow.XProcess;
+import sj.freetime.workflow.model.ProcessInfo;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class XWorkflow extends XTask implements XFlow<XWorkflow, XTask> {
 
-    private final List<XProcess> processList;
+    private final List<XTask> processList;
+    private final boolean stopWhenFail;
 
     public XWorkflow(String taskName) {
         this(taskName, true);
     }
 
     public XWorkflow(String taskName, boolean stopWhenFail) {
-        super(taskName, stopWhenFail);
-        processList = new ArrayList<>();
+        super(taskName);
+        processList = new LinkedList<>();
+        this.stopWhenFail = stopWhenFail;
         init();
     }
 
@@ -39,12 +42,12 @@ public abstract class XWorkflow extends XTask implements XFlow<XWorkflow, XTask>
     }
 
     @Override
-    protected XData execute(XData input) {
+    protected ProcessInfo execute(ProcessInfo input) {
         return runTask(input, 0);
     }
 
-    XData runTask(XData input, int step) {
-        if (step == processList.size() || (stopWhenFail && !input.isResult())) {
+    ProcessInfo runTask(ProcessInfo input, int step) {
+        if (step == processList.size() || (stopWhenFail && input.failed())) {
             return input;
         } else {
             XProcess task = processList.get(step);

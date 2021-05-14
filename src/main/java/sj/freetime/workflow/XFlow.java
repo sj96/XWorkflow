@@ -1,4 +1,4 @@
-package org.sj.core.demo.workflow;
+package sj.freetime.workflow;
 
 import java.util.List;
 

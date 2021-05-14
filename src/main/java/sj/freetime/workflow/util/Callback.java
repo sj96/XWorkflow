@@ -1,4 +1,4 @@
-package org.sj.core.demo.workflow.util;
+package sj.freetime.workflow.util;
 
 @FunctionalInterface
 public interface Callback<T> {
